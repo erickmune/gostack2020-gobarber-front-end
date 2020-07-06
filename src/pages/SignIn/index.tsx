@@ -4,7 +4,7 @@ import { FormHandles } from '@unform/core'
 import { Form } from "@unform/web"
 import * as Yup from 'yup'
 
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 
 import { useAuth } from '../../hooks/AuthContext'
 import { useToast } from '../../hooks/ToastContext';
@@ -28,6 +28,7 @@ const SignIn: React.FC = () => {
 
   const { signIn } = useAuth();
   const { addToast } = useToast();
+  const history = useHistory();
 
   const handleSubmit = useCallback( async (data: SignInFormData) => {
     try{
@@ -48,6 +49,8 @@ const SignIn: React.FC = () => {
         email: data.email,
         password: data.password
       });
+
+      history.push('/dashboard');
     }catch (err){
       if(err instanceof Yup.ValidationError){
         const errors = getValidationErrors(err);
@@ -61,7 +64,7 @@ const SignIn: React.FC = () => {
         description: 'Ocorreu um erro ao fazer login, cheque as credenciais'
       });
     }
-  }, [addToast, signIn])
+  }, [addToast, history, signIn])
 
   return (
     <Container>
